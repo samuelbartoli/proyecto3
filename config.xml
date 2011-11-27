@@ -1,0 +1,213 @@
+<proyecto>
+<niveles>
+2
+</niveles>
+<nivel>
+  <id>
+    1
+  </id>
+  <tablero>
+  <ancho>100</ancho> <largo>100</largo>
+  </tablero>
+  <jugador>
+    <Vi>
+    1.0
+    </Vi>
+    <Aceleration>
+    0.5
+    </Aceleration>
+  </jugador>
+  <contrincantes>
+    2
+  </contrincantes>
+  <contrincante>
+    <Vi>
+    0.90
+    </Vi>
+    <Aceleration>
+    0.5
+    </Aceleration>
+    <Inicio>
+    <x>20</x> <y>40</y>
+    </Inicio>
+    <Ataque>
+        <tipo>
+         1
+        </tipo>
+    </Ataque>
+  </contrincante>
+  <contrincante>
+    <Vi>
+    1.5
+    </Vi>
+    <Aceleration>
+    0.8
+    </Aceleration>
+    <Inicio>
+    <x>50</x> <y>90</y>
+    </Inicio>
+    <Ataque>
+        <tipo>
+         2
+        </tipo>
+        <puntos>
+        3
+        </puntos>
+        <punto>
+        <x> 50 </x> <y> 60 </y>
+        </punto>
+        <punto>
+        <x> 80 </x> <y> 5 </y>
+        </punto>
+        <punto>
+        <x> 37 </x> <y> 12 </y>
+        </punto>
+    </Ataque>
+  </contrincante>
+  <obstaculos>
+   2
+  </obstaculos>
+  <obstaculo>
+    <archivo>
+    "./talfi.obj"
+    </archivo>
+    <trayectoria>
+        <velocidad>
+        2.0
+        </velocidad>
+        <puntos>
+        2
+        </puntos>
+        <punto>
+        <x>70</x> <y>65</y>
+        </punto>
+        <punto>
+        <x>6</x> <y>14</y>
+        </punto>
+    </trayectoria>
+  </obstaculo>
+  <obstaculo>
+    <archivo>
+    "./talfiti.obj"
+    </archivo>
+    <trayectoria>
+        <velocidad>
+        3.0
+        </velocidad>
+        <puntos>
+        2
+        </puntos>
+        <punto>
+        <x>42</x> <y>35</y>
+        </punto>
+        <punto>
+        <x>16</x> <y>20</y>
+        </punto>
+    </trayectoria>
+  </obstaculo>
+</nivel>
+<nivel>
+  <id>
+    2
+  </id>
+  <tablero>
+  <ancho>155</ancho> <largo>145</largo>
+  </tablero>
+  <jugador>
+    <Vi>
+    1.85555
+    </Vi>
+    <Aceleration>
+    0.15555
+    </Aceleration>
+  </jugador>
+  <contrincantes>
+    2
+  </contrincantes>
+  <contrincante>
+    <Vi>
+    0.95
+    </Vi>
+    <Aceleration>
+    0.6555
+    </Aceleration>
+    <Inicio>
+    <x>25</x> <y>45</y>
+    </Inicio>
+    <Ataque>
+        <tipo>
+         1
+        </tipo>
+    </Ataque>
+  </contrincante>
+  <contrincante>
+    <Vi>
+    1.5555
+    </Vi>
+    <Aceleration>
+    0.8555
+    </Aceleration>
+    <Inicio>
+    <x>55</x> <y>95</y>
+    </Inicio>
+    <Ataque>
+        <tipo>
+        2
+        </tipo>
+        <puntos>
+        3
+        </puntos>
+        <punto>
+        <x> 55 </x> <y> 65 </y>
+        </punto>
+        <punto>
+        <x> 85 </x> <y> 55 </y>
+        </punto>
+        <punto>
+        <x> 42 </x> <y> 17 </y>
+        </punto>
+    </Ataque>
+  </contrincante>
+  <obstaculos>
+  2
+  </obstaculos>
+  <obstaculo>
+    <archivo>
+    "./talfi55.obj"
+    </archivo>
+    <trayectoria>
+        <velocidad>
+        2.5555
+        </velocidad>
+        <puntos>
+        2
+        </puntos>
+        <punto>
+        <x>75</x> <y>67</y>
+        </punto>
+        <punto>
+        <x>63</x> <y>21</y>
+        </punto>
+    </trayectoria>
+  </obstaculo>
+  <obstaculo>
+    <archivo>
+    "./talfiti55.obj"
+    </archivo>
+    <trayectoria>
+        <velocidad>
+        3.555
+        </velocidad>
+        <puntos>
+        2
+        </puntos>
+        <punto>
+        <x>47</x> <y>37</y>
+        </punto>
+        <punto>
+        <x>71</x> <y>25</y>
+        </punto>
+    </trayectoria>
+  </obstaculo>
+</nivel>
+</proyecto>
