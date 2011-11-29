@@ -4,7 +4,7 @@
 
 using namespace std;
 
-typedef struct{
+typedef struct punto{
     float x;
     float y;
     float z;
@@ -22,6 +22,7 @@ typedef struct obstaculos{
 
 typedef struct jugadores{
     float trayec_v;
+    float vact;
     float aceleration;
     punto ptoact;
     int ptosig;
