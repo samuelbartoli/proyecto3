@@ -39,7 +39,6 @@ void ParserFile(char *filename, vector<nivel> * niveles){
     
     //Recorremos los niveles
     for(int i = 0; i < nroniveles ; i++, nodo = nodo->next_sibling("nivel")){
-        //int puntos = atoi(nodo->first_node("jugador")->first_node("trayectoria")->first_node("puntos")->value());
         //declaramos un nivel
         nivel cn ;
         cn.level_id = atoi(nodo->first_node("id")->value());
@@ -74,6 +73,7 @@ void ParserFile(char *filename, vector<nivel> * niveles){
             cont.trayec_v = atof(nodocon->first_node("Vi")->value());
             cont.aceleration = atof(nodocon->first_node("Aceleration")->value());
             cont.ptoact.x = atof(nodocon->first_node("Inicio")->first_node("x")->value());
+            cont.ptoact.y = 0;
             cont.ptoact.z = atof(nodocon->first_node("Inicio")->first_node("y")->value());
               
  
@@ -91,6 +91,7 @@ void ParserFile(char *filename, vector<nivel> * niveles){
                 nodopuntos = nodocon->first_node("Ataque")->first_node("punto");
                 for(int l = 0; l < cont.nro_puntos ; l++){
                     (cont.points[l]).x = atof(nodopuntos->first_node("x")->value());
+                    (cont.points[l]).y = 0;
                     (cont.points[l]).z = atof(nodopuntos->first_node("y")->value());
                     nodopuntos = nodopuntos->next_sibling("punto");
                 }
@@ -111,14 +112,20 @@ void ParserFile(char *filename, vector<nivel> * niveles){
             obstaculos obs ;
             obs.archivo = objetos->first_node("archivo")->value();
             obs.trayec_v = atof(objetos->first_node("trayectoria")->first_node("velocidad")->value()); 
+
             obs.nro_puntos = atof(objetos->first_node("trayectoria")->first_node("puntos")->value());
 
             //Nodo auxiliar para recorrer los obstaculos
             xml_node<> * aux;
             aux = objetos->first_node("trayectoria")->first_node("punto");
 
+            obs.ptoact.x = atof(aux->first_node("x")->value());
+            obs.ptoact.y = 0;
+            obs.ptoact.z = atof(aux->first_node("y")->value());
+
             for(int p = 0; p < obs.nro_puntos; p++, aux = aux->next_sibling("punto")){
                 (obs.points[p]).x = atof(aux->first_node("x")->value());
+                (obs.points[p]).y = 0;
                 (obs.points[p]).z = atof(aux->first_node("y")->value());
             }
  
@@ -204,7 +211,7 @@ void print_nivel(nivel l){
         }
 }
 
-
+/*
 int main (int argc, char * argv[]){
     vector<nivel> niveles;   
 
@@ -213,4 +220,4 @@ int main (int argc, char * argv[]){
 
     print_nivel(niveles);
 }
-
+*/
