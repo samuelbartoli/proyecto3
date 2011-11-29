@@ -44,17 +44,17 @@ void handleResize(int w, int h){
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION); 
 	glLoadIdentity(); 
-	gluPerspective(45.0,(double)w / (double)h, 1.0, 300.0) ;
+	gluPerspective(45.0,(double)w / (double)h, 1, 1000.0) ;
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
 
 //Settea opciones de opengl
 void initRendering() {
-    glutInitWindowSize (1366, 768); 
+    glutInitWindowSize (1300, 700); 
     glutInitWindowPosition (20, 20);
     glutCreateWindow ("Tron");    
-	gluPerspective(45.0,16/9, 1.0, 2000.0) ;
+	//gluPerspective(45.0, 16/9, 1.0, 1) ;
 	glEnable(GL_DEPTH_TEST);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -327,8 +327,6 @@ void movimiento(double tiempo){
         delta.x = tiempo*vel*uni.x;
         delta.z = tiempo*vel*uni.z;
 
-       // cout << delta.x << " " << delta.z << endl;
-
         if(abs(dest.x-act.x)<=abs(delta.x) && abs(dest.z-act.z)<=abs(delta.z)){
             act.x=dest.x;
             act.z=dest.z;
@@ -344,6 +342,8 @@ void movimiento(double tiempo){
 
     }  
 }
+
+
 
 //REUSAR PARA LAS COLISIONES
 /*
