@@ -269,7 +269,7 @@ void movimiento(double tiempo){
     ace = lvlactual.player[0].aceleration;
     vel = lvlactual.player[0].vact*50;
 
-    delta.x = tiempo*vel+(ace*SQR(tiempo))/2;
+    delta.x = (tiempo*vel)+((ace*SQR(tiempo))/2);
     delta.y = ace*tiempo;
 
     if(vstate == 0){
@@ -462,6 +462,42 @@ void moverdisco(punto dest, double tiempo){
     }
 }
 */
+
+void raytracing(){
+   Gluint selectBuf[BUFSIZE];
+    GLint hits, viewport[4];
+
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    glSelectBuffer(BUFSIZE, selectBuf);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+
+    glRenderMode(GL_SELECT);
+
+    glInitNames();
+    glPushName(0);
+
+    glLoadIdentity();
+    gluPickMatrix(); //falta algo
+
+    aspectratio = (float)viewport[2] / (float)viewport[3];
+    gluPerspective(45.0f,aspectratio,0.1,400.0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+        glLoadIdentity();
+        gluLookAt();//falta algo
+        //Dibujar los objetos
+    glPopMatrix();
+    
+    hits = glRenderMode(GL_RENDER);
+    //procesa los hits
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glFlush();
+    
+}
 
 void update(int entero){
     
