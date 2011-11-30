@@ -563,6 +563,8 @@ void iniciodenivel(){
     glutPostRedisplay(); 
 }
 
+//comentario random
+
 //Funcion que dibuja la escena
 void dibujar_escena(){
 
