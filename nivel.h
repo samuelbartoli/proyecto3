@@ -29,6 +29,7 @@ typedef struct jugadores{
     int ataque;
     int nro_puntos;
     punto points[50];
+    std::vector<punto> estela;
 
     public:
     jugadores(){};
@@ -40,6 +41,7 @@ typedef struct jugadores{
         ptosig = A.ptosig;
         ataque = A.ataque;
         nro_puntos = A.nro_puntos;
+        estela = A.estela;
         memcpy(points,A.points,sizeof(punto)*A.nro_puntos);
     }
 }jugadores;

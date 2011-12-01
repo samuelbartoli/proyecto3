@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-//#include "TriMesh.h"
-//#include "XForm.h"
+#include "TriMesh.h"
 #include <vector>
 #include <ctime>
 #include <cmath>
@@ -12,13 +11,6 @@
 
 #define SQR(a) ((a)*(a))
 #define G 0.1
-#define RADIO 1
-#define MAX_X 102.5
-#define MAX_Z 102.5
-#define MIN_X 0
-#define MIN_Z 0
-#define MIN_Y 2.7
-
 using namespace std;
 
 int rotacion_x = 0;
@@ -26,6 +18,8 @@ int rotacion_y = 0;
 
 double sx,sy,sz;
 vector<nivel> niveles;
+vector<punto> jstela;
+
 nivel lvlactual;
 int vidas,puntaje,enemies,cam_mode,dir,vstate;
 int init=0;
@@ -94,19 +88,28 @@ void manejador_teclas(unsigned char key,
 void move_player(int key, int x, int y){
     switch(key) {
         case GLUT_KEY_RIGHT:
-            dir=1;
+            if(dir!=3){ 
+                dir = 1;
+            }
             break;
         case GLUT_KEY_LEFT:
-            dir=3;
+            if(dir!=1){
+                dir=3;
+            }
             break;
         case GLUT_KEY_UP:
-            dir=0;
+            if(dir!=2){
+                dir=0;
+            }
             break;
         case GLUT_KEY_DOWN:
-            dir=2;
+            if(dir!=0){
+                dir=2;
+            }
             break;
-    }  
-    //glutPostRedisplay();
+    }
+  
+    (lvlactual.player[0].estela).push_back(lvlactual.player[0].ptoact);
 }
 
 // Dibuja un cuadrado con los tamanos tamx, tamy , tamz 
@@ -242,6 +245,56 @@ void dibujarEjes(){
     glVertex3f(0,0,3);
     glEnd();
     glPopMatrix();
+}
+
+void auxestela(int r, int g, int b, punto u, punto v, float alpha){
+    glPushMatrix();
+    glLineWidth(1.5);
+    glColor4f(r,g,b,alpha);
+    glBegin(GL_QUADS);
+    glVertex3f(u.x,u.y,u.z);
+    glVertex3f(v.x,v.y,v.z);
+    glVertex3f(v.x,v.y+5,v.z);
+    glVertex3f(u.x,u.y+5,u.z);
+    glEnd();
+    glPopMatrix();
+}
+
+//Dibuja la estela 
+void dibujarestela(){
+    punto aux;
+    int i;
+    for(i = 0; i < lvlactual.player[0].estela.size()-2; i++){
+            auxestela(1,0,0, lvlactual.player[0].estela[i], 
+                             lvlactual.player[0].estela[i+1], 0.5);
+    }
+
+    switch(dir){
+        case 0:
+            aux.x = lvlactual.player[0].estela[i+1].x;
+            aux.z = lvlactual.player[0].estela[i+1].z+3;
+            auxestela(1,0,0, lvlactual.player[0].estela[i], 
+                             aux, 0.5);
+            break;
+        case 1:
+            aux.x = lvlactual.player[0].estela[i+1].x-3;
+            aux.z = lvlactual.player[0].estela[i+1].z;
+            auxestela(1,0,0, lvlactual.player[0].estela[i], 
+                             aux, 0.5);
+            break;
+        case 2:
+            aux.x = lvlactual.player[0].estela[i+1].x;
+            aux.z = lvlactual.player[0].estela[i+1].z-3;
+            auxestela(1,0,0, lvlactual.player[0].estela[i], 
+                             aux, 0.5);
+            break;
+        case 3:
+            aux.x = lvlactual.player[0].estela[i+1].x+3;
+            aux.z = lvlactual.player[0].estela[i+1].z;
+            auxestela(1,0,0, lvlactual.player[0].estela[i], 
+                             aux, 0.5);
+            break;
+    }
     
 }
 
@@ -309,6 +362,8 @@ void movimiento(double tiempo){
             lvlactual.player[0].ptoact.x -= delta.x;
             break;
     }
+    
+    lvlactual.player[0].estela[lvlactual.player[0].estela.size()-1]=lvlactual.player[0].ptoact;
 
     //Mover los obstaculos
     for(int i=0; i<lvlactual.objs.size(); i++){
@@ -343,125 +398,67 @@ void movimiento(double tiempo){
     }  
 }
 
-
-
-//REUSAR PARA LAS COLISIONES
-/*
-
-//Movimiento del Disco y colisiones del mismo
-void moverdisco(punto dest, double tiempo){
+//colisiones
+void colisiones(double tiempo){
 
     punto act,delta;
-    float vel,deltav;
+    float vel,ace;
 
-    for(int i=0; i<lvlactual.nro_jugadores; i++){
-        if(lvlactual.player[i].timer <= 5){
-            lvlactual.player[i].timer-=tiempo;
+    //for(int i=0; i<lvlactual.nro_jugadores; i++){
 
-            if(lvlactual.player[i].timer<0){
-                lvlactual.player[i].timer=0;
-            }
-            continue;
-        }
+        act = lvlactual.player[0].ptoact;
+        ace = lvlactual.player[0].aceleration;
+        vel = lvlactual.player[0].vact*50;
 
-        act = lvlactual.player[i].disc.pos;
-        vel = lvlactual.player[i].disc.v;
-      
-        delta.x = tiempo*vel.x;
-        delta.y = -(G*SQR(tiempo))/2+vel.y*tiempo;
-        delta.z = tiempo*vel.z;
-        deltav = -G*tiempo;
+        delta.x = tiempo*vel+(ace*SQR(tiempo))/2;
+        delta.y = ace*tiempo;
 
-        //Colisiones
-        
+
         //Paredes
-        //Lados
-        if(RADIO + vel.x + delta.x > MAX_X){
-            lvlactual.player[i].disc.v.x = -vel.x;
-            lvlactual.player[i].disc.pos.x = MAX_X - RADIO;
-            lvlactual.player[i].disc.rebotes++;
-            if(lvlactual.player[i].disc.rebotes == 16){
-                lvlactual.player[i].disc.timer = 5;
-                lvlactual.player[i].disc.v.x = 0;
-                lvlactual.player[i].disc.v.y = 0;
-                lvlactual.player[i].disc.v.z = 0;
-                lvlactual.player[i].disc.pos.x = 0;
-                lvlactual.player[i].disc.pos.y = 0;
-                lvlactual.player[i].disc.pos.z = 0;
-                lvlactual.player[i].disc.rebotes = 0;
+        switch(dir){
+        case 0:
+            if(act.z - delta.x < 0){ // pared superior
+                lvlactual.player[0].ptoact.z = 0;
+                cout << "juego terminado presione cualquier tecla" << endl;
+                scanf(":");
+                exit(0);
+                
             }
-        }else if(-RADIO + vel.x + delta.x < MIN_X){
-            lvlactual.player[i].disc.v.x = -vel.x;
-            lvlactual.player[i].disc.pos.x = MIN_X + RADIO;
-            lvlactual.player[i].disc.rebotes++;
-            if(lvlactual.player[i].disc.rebotes == 16){
-                lvlactual.player[i].disc.timer = 5;
-                lvlactual.player[i].disc.v.x = 0;
-                lvlactual.player[i].disc.v.y = 0;
-                lvlactual.player[i].disc.v.z = 0;
-                lvlactual.player[i].disc.pos.x = 0;
-                lvlactual.player[i].disc.pos.y = 0;
-                lvlactual.player[i].disc.pos.z = 0;
-                lvlactual.player[i].disc.rebotes = 0;
+            break;
+        case 1:
+            if(act.x + delta.x > lvlactual.Area.x){ //pared derecha
+                lvlactual.player[0].ptoact.x = lvlactual.Area.x;
+                cout << "juego terminado presione cualquier tecla" << endl;
+                scanf(":");
+                exit(0);
             }
+            break;
+        case 2:
+            if(act.z + delta.x > lvlactual.Area.z){ //pared inferior
+                lvlactual.player[0].ptoact.z = lvlactual.Area.z;
+                cout << "juego terminado presione cualquier tecla" << endl;
+                scanf(":");
+                exit(0);
+            }
+            break;
+        case 3:
+            if(act.x - delta.x < 0){ //pared izquierda
+                lvlactual.player[0].ptoact.x = 0;
+                cout << "juego terminado presione cualquier tecla" << endl;
+                scanf(":");
+                exit(0);
+            }
+            break;
         }
 
-        //Sup e inf
-        if(RADIO + vel.z + delta.z > MAX_Z){
-            lvlactual.player[i].disc.v.z = -vel.z;
-            lvlactual.player[i].disc.pos.z = MAX_Z - RADIO;
-            lvlactual.player[i].disc.rebotes++;
-            if(lvlactual.player[i].disc.rebotes == 16){
-                lvlactual.player[i].disc.timer = 5;
-                lvlactual.player[i].disc.v.x = 0;
-                lvlactual.player[i].disc.v.y = 0;
-                lvlactual.player[i].disc.v.z = 0;
-                lvlactual.player[i].disc.pos.x = 0;
-                lvlactual.player[i].disc.pos.y = 0;
-                lvlactual.player[i].disc.pos.z = 0;
-                lvlactual.player[i].disc.rebotes = 0;
-            }
-        }else if(-RADIO + vel.z + delta.z < MIN_Z){
-            lvlactual.player[i].disc.v.z = -vel.z;
-            lvlactual.player[i].disc.pos.z = MIN_Z + RADIO;
-            lvlactual.player[i].disc.rebotes++;
-            if(lvlactual.player[i].disc.rebotes == 16){
-                lvlactual.player[i].disc.timer = 5;
-                lvlactual.player[i].disc.v.x = 0;
-                lvlactual.player[i].disc.v.y = 0;
-                lvlactual.player[i].disc.v.z = 0;
-                lvlactual.player[i].disc.pos.x = 0;
-                lvlactual.player[i].disc.pos.y = 0;
-                lvlactual.player[i].disc.pos.z = 0;
-                lvlactual.player[i].disc.rebotes = 0;
-            }
-        }
 
-        //Piso
-        if(-RADIO + vel.y + delta.y < MIN_Y){
-            lvlactual.player[i].disc.v.y = -vel.y;
-            lvlactual.player[i].disc.pos.y = MIN_Y + RADIO;
-            lvlactual.player[i].disc.rebotes++;
-            if(lvlactual.player[i].disc.rebotes == 16){
-                lvlactual.player[i].disc.timer = 5;
-                lvlactual.player[i].disc.v.x = 0;
-                lvlactual.player[i].disc.v.y = 0;
-                lvlactual.player[i].disc.v.z = 0;
-                lvlactual.player[i].disc.pos.x = 0;
-                lvlactual.player[i].disc.pos.y = 0;
-                lvlactual.player[i].disc.pos.z = 0;
-                lvlactual.player[i].disc.rebotes = 0;
-            }
-        }
 
         //Objetos
-        
 
-        //Personajes
-        
-    }
+
+
+    //}
 }
-*/
 
 void update(int entero){
     
@@ -469,19 +466,10 @@ void update(int entero){
     double deltatime = ((double)(newtime-oldtime))/CLOCKS_PER_SEC;
     oldtime = clock();
 
-    //lvltime-=deltatime;
-
-    //Chequeo el tiempo del nivel
-    //if(lvltime<=0){
-    //    printf("Game Over\n");
-    //    exit(0);
-    //}
-
-    //Mover los obstaculos
+    //Manejo de colisiones
+    colisiones(deltatime);
+    //Mover obstaculos, jugador
     movimiento(deltatime);
-
-    //Mover discos
-    //moverdisco();
     
     glutTimerFunc(25, update, 1);
     glutPostRedisplay();
@@ -492,7 +480,6 @@ void iniciodenivel(){
     lvlactual=niveles[lvlactual.level_id];
     //Cargar los jugadores
     for(int i=0; i<lvlactual.nro_jugadores; i++){
-        //lvlactual.player[i].ptoact = lvlactual.player[i].points[0];
         if(i==0){
             lvlactual.player[i].ptoact.x = 0; //pto inicio del jugador
             lvlactual.player[i].ptoact.z = lvlactual.Area.z; //pto inicio del jugador
@@ -500,6 +487,8 @@ void iniciodenivel(){
             vtop = lvlactual.player[i].trayec_v;
             lvlactual.player[i].vact = 0;
             vstate=0;
+            (lvlactual.player[i].estela).push_back(lvlactual.player[i].ptoact);
+            (lvlactual.player[i].estela).push_back(lvlactual.player[i].ptoact);
         }
 
         lvlactual.player[i].ptosig = 1;
@@ -529,13 +518,13 @@ void iniciodenivel(){
 
 //Funcion que dibuja la escena
 void dibujar_escena(){
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
     if(cam_mode==0){
-        gluLookAt(0,80,lvlactual.Area.z+15, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        //gluLookAt(0,80,lvlactual.Area.z+15, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        gluLookAt(0,280,0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0);
     }else if(cam_mode==1){
         
     }else if(cam_mode==2){
@@ -581,6 +570,9 @@ void dibujar_escena(){
         glPopMatrix();
     }
 
+    //Crear la estela
+    dibujarestela();
+
     dib.x = 0;
     dib.y = 0;
     dib.z = 0;
@@ -615,12 +607,12 @@ int main(int argc, char* argv[]) {
     ParserFile(argv[1],&niveles);
     glutInit(&argc,argv);
 	initRendering();
-/*
-    const char *filename = argv[1];
-    TriMesh *themesh = TriMesh::read(filename);
+
+/*    const char *filename = argv[2];
+    TriMesh *themesh = TriMesh::read(argv[2]);
     //if(!themesh)
       //  usage(argv[0]);
-    themesh->need_normals();
+  themesh->need_normals();
     themesh->need_tstrips();
     themesh->need_bsphere();
     meshes.push_back(themesh);
