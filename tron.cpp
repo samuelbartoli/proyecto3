@@ -459,7 +459,7 @@ void colisiones(double tiempo){
 
     //}
 }
-
+/*
 void raytracing(){
    Gluint selectBuf[BUFSIZE];
     GLint hits, viewport[4];
@@ -495,7 +495,7 @@ void raytracing(){
     glFlush();
     
 }
-
+*/
 void update(int entero){
     
     clock_t newtime = clock();
@@ -552,35 +552,8 @@ void iniciodenivel(){
     glutPostRedisplay(); 
 }
 
-<<<<<<< HEAD
-//Funcion que dibuja la escena
-void dibujar_escena(){
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    if(cam_mode==0){
-        //gluLookAt(0,80,lvlactual.Area.z+15, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-        gluLookAt(0,280,0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0);
-    }else if(cam_mode==1){
-        
-    }else if(cam_mode==2){
-
-    }else if(cam_mode==3){
-
-    } 
-
-    //Inicializar
-    if(init){
-        iniciodenivel();
-    }
-
-    glPushMatrix();
-    glTranslatef(-lvlactual.Area.x/2,2.7,-lvlactual.Area.z/2);
-    //Dibujar Personajes
-=======
+//Dibujar Personajes
 void dibujar_personajes(){
->>>>>>> origin/master
     punto dib;
     for(int i=0; i < lvlactual.nro_jugadores; i++){
         glPushMatrix();
@@ -611,19 +584,9 @@ void dibujar_personajes(){
     }
 }
 
-<<<<<<< HEAD
-    //Crear la estela
-    dibujarestela();
-
-    dib.x = 0;
-    dib.y = 0;
-    dib.z = 0;
-
-    //Dibujar Obstaculos
-=======
+//Dibujar Obstaculos
 void dibujar_obstaculos(){
     punto dib;
->>>>>>> origin/master
     for(int i=0; i < lvlactual.objs.size(); i++){
         dib = lvlactual.objs[i].ptoact;
         glPushMatrix();
@@ -644,7 +607,8 @@ void dibujar_escena(){
     glLoadIdentity();
 
     if(cam_mode==0){
-        gluLookAt(0,80,lvlactual.Area.z+15, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        //gluLookAt(0,80,lvlactual.Area.z+15, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        gluLookAt(0,280,0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0);
     }else if(cam_mode==1){
         
     }else if(cam_mode==2){
@@ -662,6 +626,8 @@ void dibujar_escena(){
         glTranslatef(-lvlactual.Area.x/2,2.7,-lvlactual.Area.z/2);
         //Dibujar Personajes
         dibujar_personajes();
+        //dibujar estela
+        dibujarestela();
         //Dibujar Obstaculos
         dibujar_obstaculos();   
     glPopMatrix();
