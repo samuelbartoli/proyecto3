@@ -322,7 +322,7 @@ void movimiento(double tiempo){
     ace = lvlactual.player[0].aceleration;
     vel = lvlactual.player[0].vact*50;
 
-    delta.x = tiempo*vel+(ace*SQR(tiempo))/2;
+    delta.x = (tiempo*vel)+((ace*SQR(tiempo))/2);
     delta.y = ace*tiempo;
 
     if(vstate == 0){
@@ -460,6 +460,42 @@ void colisiones(double tiempo){
     //}
 }
 
+void raytracing(){
+   Gluint selectBuf[BUFSIZE];
+    GLint hits, viewport[4];
+
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    glSelectBuffer(BUFSIZE, selectBuf);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+
+    glRenderMode(GL_SELECT);
+
+    glInitNames();
+    glPushName(0);
+
+    glLoadIdentity();
+    gluPickMatrix(); //falta algo
+
+    aspectratio = (float)viewport[2] / (float)viewport[3];
+    gluPerspective(45.0f,aspectratio,0.1,400.0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+        glLoadIdentity();
+        gluLookAt();//falta algo
+        //Dibujar los objetos
+    glPopMatrix();
+    
+    hits = glRenderMode(GL_RENDER);
+    //procesa los hits
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glFlush();
+    
+}
+
 void update(int entero){
     
     clock_t newtime = clock();
@@ -516,6 +552,7 @@ void iniciodenivel(){
     glutPostRedisplay(); 
 }
 
+<<<<<<< HEAD
 //Funcion que dibuja la escena
 void dibujar_escena(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -541,6 +578,9 @@ void dibujar_escena(){
     glPushMatrix();
     glTranslatef(-lvlactual.Area.x/2,2.7,-lvlactual.Area.z/2);
     //Dibujar Personajes
+=======
+void dibujar_personajes(){
+>>>>>>> origin/master
     punto dib;
     for(int i=0; i < lvlactual.nro_jugadores; i++){
         glPushMatrix();
@@ -569,7 +609,9 @@ void dibujar_escena(){
             
         glPopMatrix();
     }
+}
 
+<<<<<<< HEAD
     //Crear la estela
     dibujarestela();
 
@@ -578,6 +620,10 @@ void dibujar_escena(){
     dib.z = 0;
 
     //Dibujar Obstaculos
+=======
+void dibujar_obstaculos(){
+    punto dib;
+>>>>>>> origin/master
     for(int i=0; i < lvlactual.objs.size(); i++){
         dib = lvlactual.objs[i].ptoact;
         glPushMatrix();
@@ -588,9 +634,39 @@ void dibujar_escena(){
         glPopMatrix();
     }
 
+}
+
+//Funcion que dibuja la escena
+void dibujar_escena(){
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    if(cam_mode==0){
+        gluLookAt(0,80,lvlactual.Area.z+15, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    }else if(cam_mode==1){
+        
+    }else if(cam_mode==2){
+
+    }else if(cam_mode==3){
+
+    } 
+
+    //Inicializar
+    if(init){
+        iniciodenivel();
+    }
+
+    glPushMatrix();
+        glTranslatef(-lvlactual.Area.x/2,2.7,-lvlactual.Area.z/2);
+        //Dibujar Personajes
+        dibujar_personajes();
+        //Dibujar Obstaculos
+        dibujar_obstaculos();   
     glPopMatrix();
+
     dibujarEjes();
-    
     
     //Dibujar el Tablero
     dibujarArena();
