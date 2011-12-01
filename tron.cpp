@@ -62,16 +62,16 @@ void initRendering() {
 void manejador_teclas(unsigned char key, 
 					int x, int y) {
 	switch (key) {
-        case 100:   //Tecla d
+        case 100:   //Tecla d first person
             cam_mode = 0;
             break;
-        case 114:   //Tecla r
+        case 114:   //Tecla r tercera persona follow
             cam_mode = 1;
             break;
-        case 101:   //Tecla e
+        case 101:   //Tecla e panoramica
             cam_mode = 2;
             break;
-        case 116:   //Tecla t
+        case 116:   //Tecla t todas
             cam_mode = 3;
             break;
         case 104:   //Tecla h
@@ -451,14 +451,10 @@ void colisiones(double tiempo){
             break;
         }
 
-
-
         //Objetos
 
-
-
-    //}
 }
+
 /*
 void raytracing(){
    Gluint selectBuf[BUFSIZE];
@@ -546,7 +542,7 @@ void iniciodenivel(){
     //Tiempo actual que sera el tiempo viejo xD
         oldtime = clock()/CLOCKS_PER_SEC;
     //Modo de camara por default
-        cam_mode=0;
+        cam_mode=2;
 
     //print_nivel(lvlactual);
     glutPostRedisplay(); 
@@ -607,12 +603,10 @@ void dibujar_escena(){
     glLoadIdentity();
 
     if(cam_mode==0){
-        //gluLookAt(0,80,lvlactual.Area.z+15, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-        gluLookAt(0,280,0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0);
     }else if(cam_mode==1){
-        
+        gluLookAt(0,280,0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0);
     }else if(cam_mode==2){
-
+        gluLookAt(0,80,lvlactual.Area.z+15, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     }else if(cam_mode==3){
 
     } 
